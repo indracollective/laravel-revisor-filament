@@ -16,13 +16,7 @@ class StatusColumn extends TextColumn
         $this
             ->label('Status')
             ->badge()
-            ->getStateUsing(function (HasRevisor $record) {
-                if (! $record->isPublished()) {
-                    return 'draft';
-                }
-
-                return $record->isRevised() ? 'published,revised' : 'published';
-            })
+            ->getStateUsing(fn (HasRevisor $record): string => implode(',', $record->getRevisorStatuses()))
             ->separator(',')
             ->color(fn (string $state): string => match ($state) {
                 'revised' => 'warning',
