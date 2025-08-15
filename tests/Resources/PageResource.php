@@ -14,7 +14,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Indra\RevisorFilament\Filament\ListVersionsAction;
 use Indra\RevisorFilament\Filament\PublishBulkAction;
 use Indra\RevisorFilament\Filament\PublishInfoColumn;
 use Indra\RevisorFilament\Filament\StatusColumn;
