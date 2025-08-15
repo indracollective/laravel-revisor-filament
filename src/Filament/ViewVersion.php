@@ -11,9 +11,9 @@ use Indra\Revisor\Contracts\HasRevisor;
 
 class ViewVersion extends ViewRecord
 {
-    public int|string $version;
+    public int | string $version;
 
-    protected (Model&HasRevisor)|null $versionRecord = null;
+    protected (Model & HasRevisor) | null $versionRecord = null;
 
     public function getHeaderActions(): array
     {
@@ -22,7 +22,7 @@ class ViewVersion extends ViewRecord
         ];
     }
 
-    public function mount(int|string $record, int|string|null $version = null): void
+    public function mount(int | string $record, int | string | null $version = null): void
     {
         parent::mount($record);
 
@@ -35,7 +35,7 @@ class ViewVersion extends ViewRecord
         $this->versionRecord = $this->resolveVersion($version);
     }
 
-    protected function resolveVersion(int|string $id): Model&HasRevisor
+    protected function resolveVersion(int | string $id): Model & HasRevisor
     {
         /** @var Model&HasRevisor $record */
         $record = $this->getRecord();
@@ -50,7 +50,7 @@ class ViewVersion extends ViewRecord
         return $version;
     }
 
-    public function getVersionRecord(): Model&HasRevisor
+    public function getVersionRecord(): Model & HasRevisor
     {
         if (! $this->versionRecord) {
             $this->versionRecord = $this->resolveVersion($this->version);
@@ -66,6 +66,6 @@ class ViewVersion extends ViewRecord
 
     public function getBreadcrumb(): string
     {
-        return static::$breadcrumb ?? 'Version #'.$this->getVersionRecord()->version_number;
+        return static::$breadcrumb ?? 'Version #' . $this->getVersionRecord()->version_number;
     }
 }

@@ -6,9 +6,9 @@ namespace Indra\RevisorFilament\Filament;
 
 trait InteractsWithRecordVersion
 {
-    public int|string|null $version;
+    public int | string | null $version;
 
-    public function mountInteractsWithRecordVersion(int|string $record, int|string $version): void
+    public function mountInteractsWithRecordVersion(int | string $record, int | string $version): void
     {
         dd($record, $version);
     }
