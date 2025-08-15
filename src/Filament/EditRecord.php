@@ -12,7 +12,7 @@ class EditRecord extends FilamentEditRecord
     protected function getHeaderActions(): array
     {
         return [
-            ViewVersionsAction::make(),
+            ListVersionsAction::make(),
             DeleteAction::make(),
         ];
     }
