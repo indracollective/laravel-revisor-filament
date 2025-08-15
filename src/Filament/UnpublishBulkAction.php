@@ -4,21 +4,16 @@ declare(strict_types=1);
 
 namespace Indra\RevisorFilament\Filament;
 
+use Filament\Actions\BulkAction;
 use Filament\Resources\Pages\Page;
 use Filament\Support\Enums\Alignment;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Filament\Support\Facades\FilamentIcon;
-use Filament\Tables\Actions\BulkAction;
 use Illuminate\Database\Eloquent\Collection;
 use Indra\Revisor\Contracts\HasRevisor;
 
 class UnpublishBulkAction extends BulkAction
 {
-    public static function getDefaultName(): ?string
-    {
-        return 'unpublish';
-    }
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -30,8 +25,8 @@ class UnpublishBulkAction extends BulkAction
             ->deselectRecordsAfterCompletion()
             ->modalHeading(
                 fn (Collection $records, Page $livewire) => $records->count() === 1 ?
-                    'Unpublish ' . $livewire::getResource()::getRecordTitle($records->first()) :
-                    'Unpublish ' . $this->getPluralModelLabel()
+                    'Unpublish '.$livewire::getResource()::getRecordTitle($records->first()) :
+                    'Unpublish '.$this->getPluralModelLabel()
             )
             ->modalIcon(FilamentIcon::resolve('heroicon-o-arrow-down-tray') ?? 'heroicon-o-arrow-down-tray')
             ->modalIconColor('warning')
@@ -40,23 +35,28 @@ class UnpublishBulkAction extends BulkAction
                     $count = $records->count();
 
                     return $count === 1 ?
-                        'Are you sure you want to unpublish this ' . $this->getModelLabel() :
-                        "Are you sure you want to unpublish $count " . $this->getPluralModelLabel();
+                        'Are you sure you want to unpublish this '.$this->getModelLabel() :
+                        "Are you sure you want to unpublish $count ".$this->getPluralModelLabel();
                 }
             )
             ->modalAlignment(Alignment::Center)
             ->modalFooterActionsAlignment(Alignment::Center)
             ->modalSubmitActionLabel(__('filament-actions::modal.actions.confirm.label'))
-            ->modalWidth(MaxWidth::Medium)
+            ->modalWidth(Width::Medium)
             ->action(function (Collection $records, array $data) {
                 // @phpstan-ignore-next-line
-                $records->each(fn (HasRevisor $record) => $record->unpublish());
+                $records->fresh()->each(fn (HasRevisor $record) => $record->unpublish());
                 $this->success();
             })
             ->successNotificationTitle(
                 fn (array $data, Collection $records) => $records->count() > 1 ?
-                    $this->getPluralModelLabel() . ' unpublished successfully' :
-                    $this->getModelLabel() . ' unpublished successfully'
+                    $this->getPluralModelLabel().' unpublished successfully' :
+                    $this->getModelLabel().' unpublished successfully'
             );
+    }
+
+    public static function getDefaultName(): ?string
+    {
+        return 'unpublish';
     }
 }

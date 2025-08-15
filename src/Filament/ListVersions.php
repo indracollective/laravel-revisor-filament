@@ -4,39 +4,40 @@ declare(strict_types=1);
 
 namespace Indra\RevisorFilament\Filament;
 
+use Filament\Actions\ActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Tables\Actions\ActionGroup;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use InvalidArgumentException;
 
 class ListVersions extends ListRecords
 {
     use InteractsWithRecord;
 
-    public function mount(int | string | null $record = null): void
+    public function mount(int|string|null $record = null): void
     {
         if ($record === null) {
-            throw new \InvalidArgumentException('Record is required');
+            throw new InvalidArgumentException('Record is required');
         }
 
         $this->record = $this->resolveRecord($record);
 
-        $this->authorizeAccess();
+        parent::mount();
     }
 
-    protected function authorizeAccess(): void
-    {
-        abort_unless(static::getResource()::canView($this->getRecord()), 403);
-    }
+    // protected function authorizeAccess(): void
+    // {
+    //     abort_unless(static::getResource()::canView($this->getRecord()), 403);
+    // }
 
     public function getHeading(): string
     {
-        return static::$resource::getRecordTitle($this->record) . ' History';
+        return static::$resource::getRecordTitle($this->record).' History';
     }
 
     public function table(Table $table): Table
@@ -45,7 +46,7 @@ class ListVersions extends ListRecords
 
         return $table
             ->columns([
-                TextColumn::make('title'),
+                TextColumn::make('record_id'),
                 TextColumn::make('version_number')
                     ->label('Version #'),
                 IconColumn::make('is_current')
@@ -55,12 +56,12 @@ class ListVersions extends ListRecords
                     ->label('Published')
                     ->boolean(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 DeleteBulkAction::make(),
             ])
-            ->actions([
+            ->recordActions([
                 ActionGroup::make([
-                    ViewVersionTableAction::make('view'),
+                    ViewVersionAction::make('view'),
                     RevertTableAction::make(),
                     DeleteAction::make(),
                 ]),

@@ -6,18 +6,12 @@ namespace Indra\RevisorFilament\Filament;
 
 use Exception;
 use Filament\Actions\Action;
-use Filament\Notifications\Actions\Action as NotificationAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Page;
 use Indra\Revisor\Contracts\HasRevisor;
 
 class RevertAction extends Action
 {
-    public static function getDefaultName(): ?string
-    {
-        return 'revert';
-    }
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -38,6 +32,11 @@ class RevertAction extends Action
             ->icon('heroicon-o-arrow-path');
     }
 
+    public static function getDefaultName(): ?string
+    {
+        return 'revert';
+    }
+
     /**
      * @throws Exception
      */
@@ -47,6 +46,7 @@ class RevertAction extends Action
         $livewire = $this->getLivewire();
         $resource = $livewire::getResource();
         $record = $this->getRecord();
+
         $actions = [];
 
         if (! $record) {
@@ -54,15 +54,15 @@ class RevertAction extends Action
         }
 
         if ($resource::hasPage('view')) {
-            $actions[] = NotificationAction::make('view')
+            $actions[] = Action::make('view')
                 ->label('View')
-                ->url($resource::getUrl('view', ['record' => $record->getKey()]));
+                ->url($resource::getUrl('view', ['record' => $record->id]));
         }
 
         if ($resource::hasPage('edit')) {
-            $actions[] = NotificationAction::make('edit')
+            $actions[] = Action::make('edit')
                 ->label('Edit')
-                ->url($resource::getUrl('edit', ['record' => $record->getKey()]));
+                ->url($resource::getUrl('edit', ['record' => $record->id]));
         }
 
         return $actions;

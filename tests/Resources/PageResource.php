@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Indra\RevisorFilament\Tests\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Actions\ActionGroup;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Indra\RevisorFilament\Filament\ListVersionsTableAction;
@@ -30,21 +32,21 @@ class PageResource extends Resource
 {
     protected static ?string $model = Page::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $modelLabel = 'Page';
 
-    protected static ?string $navigationGroup = 'Revisor';
+    protected static string | \UnitEnum | null $navigationGroup = 'Revisor';
 
     protected static ?string $recordTitleAttribute = 'title';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        $form->schema([
+        $schema->components([
             TextInput::make('title')->required(),
         ]);
 
-        return $form;
+        return $schema;
     }
 
     public static function table(Table $table): Table
@@ -58,7 +60,7 @@ class PageResource extends Resource
             ->configure()
             ->filters([
             ])
-            ->actions([
+            ->recordActions([
                 ActionGroup::make([
                     EditAction::make(),
                     DeleteAction::make(),
@@ -69,11 +71,11 @@ class PageResource extends Resource
                     ])->dropdown(false),
                 ]),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+            ->toolbarActions([
+                BulkActionGroup::make([
                     PublishBulkAction::class::make(),
                     UnpublishBulkAction::class::make(),
-                    Tables\Actions\DeleteBulkAction::make(),
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

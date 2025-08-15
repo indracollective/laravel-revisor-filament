@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Indra\RevisorFilament\Tests\Providers;
 
+use Filament\Pages\Dashboard;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -30,7 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->pages([
-                Pages\Dashboard::class,
+                Dashboard::class,
             ])
             ->middleware([DraftMiddleware::class], isPersistent: true)
             ->middleware([
